@@ -1,7 +1,6 @@
 import {
   Flex,
   Table,
-  Checkbox,
   Tbody,
   Td,
   Text,
@@ -17,6 +16,7 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
+import { Link } from "react-router-dom";
 
 // Custom components
 import Card from "components/card/Card";
@@ -61,7 +61,7 @@ export default function CheckTable(props) {
           fontSize='22px'
           fontWeight='700'
           lineHeight='100%'>
-          Check Table
+          This Week Match Fixture
         </Text>
         <Menu />
       </Flex>
@@ -94,42 +94,34 @@ export default function CheckTable(props) {
               <Tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
                   let data = "";
-                  if (cell.column.Header === "NAME") {
+                  if (cell.column.Header === "Match") {
                     data = (
                       <Flex align='center'>
-                        <Checkbox
-                          defaultChecked={cell.value[1]}
-                          colorScheme='brandScheme'
-                          me='10px'
-                        />
                         <Text color={textColor} fontSize='sm' fontWeight='700'>
-                          {cell.value[0]}
+                          {cell.value}
                         </Text>
                       </Flex>
                     );
-                  } else if (cell.column.Header === "PROGRESS") {
+                  } else if (cell.column.Header === "Date") {
                     data = (
-                      <Flex align='center'>
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        {cell.value}
+                      </Text>
+                    );
+                  } else if (cell.column.Header === " ") {
+                    // If the field name is "id", generate a link with the ID as the path parameter
+                    data = (
+                      <Link to={`/matches/${cell.value}`}>
                         <Text
-                          me='10px'
+                          as="span"
                           color={textColor}
                           fontSize='sm'
-                          fontWeight='700'>
-                          {cell.value}%
+                          fontWeight='700'
+                          textDecoration="underline"
+                          _hover={{ color: "blue.500" }}>
+                          {'Go to Match Detail'}
                         </Text>
-                      </Flex>
-                    );
-                  } else if (cell.column.Header === "QUANTITY") {
-                    data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        {cell.value}
-                      </Text>
-                    );
-                  } else if (cell.column.Header === "DATE") {
-                    data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        {cell.value}
-                      </Text>
+                      </Link>
                     );
                   }
                   return (

@@ -1,23 +1,16 @@
 // Chakra imports
 import {
   Box,
-  Button,
   Flex,
-  Icon,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import Card from "components/card/Card.js";
-// Custom components
 import BarChart from "components/charts/BarChart";
-import React from "react";
-import {
-  barChartDataConsumption,
-  barChartOptionsConsumption,
-} from "variables/charts";
-import { MdBarChart } from "react-icons/md";
+import { barChartOptionsConsumption } from "variables/charts";
 
-export default function WeeklyRevenue(props) {
+export default function WeeklyAccuracy(props) {
   const { ...rest } = props;
 
   // Chakra Color Mode
@@ -32,8 +25,22 @@ export default function WeeklyRevenue(props) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    // Make API call to fetch the chart data
+    fetch("http://localhost:5000/accuracy")
+      .then((response) => response.json())
+      .then((data) => {
+        const accuracyData = data.accuracy
+        barChartOptionsConsumption.xaxis.categories = data.week
+        setChartData(accuracyData)})
+      .catch((error) => console.log(error));
+  }, []);
+
   return (
-    <Card align='center' direction='column' w='100%' {...rest}>
+    <Card align='center' direction='column' w='203%' {...rest}>
       <Flex align='center' w='100%' px='15px' py='10px'>
         <Text
           me='auto'
@@ -41,29 +48,16 @@ export default function WeeklyRevenue(props) {
           fontSize='xl'
           fontWeight='700'
           lineHeight='100%'>
-          Weekly Revenue
+          Weekly Accuracy
         </Text>
-        <Button
-          align='center'
-          justifyContent='center'
-          bg={bgButton}
-          _hover={bgHover}
-          _focus={bgFocus}
-          _active={bgFocus}
-          w='37px'
-          h='37px'
-          lineHeight='100%'
-          borderRadius='10px'
-          {...rest}>
-          <Icon as={MdBarChart} color={iconColor} w='24px' h='24px' />
-        </Button>
       </Flex>
 
       <Box h='240px' mt='auto'>
-        <BarChart
-          chartData={barChartDataConsumption}
-          chartOptions={barChartOptionsConsumption}
-        />
+        {chartData.length > 0 ? (
+          <BarChart chartData={chartData} chartOptions={barChartOptionsConsumption} />
+        ) : (
+          <p>Loading chart data...</p>
+        )}
       </Box>
     </Card>
   );
