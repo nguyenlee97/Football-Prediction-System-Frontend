@@ -9,6 +9,8 @@ import {
   Th,
   Thead,
   Tr,
+  Button,
+  Select,
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
@@ -35,6 +37,7 @@ export default function ColumnsTable(props) {
     {
       columns,
       data,
+      initialState: { pageIndex: 0 }, // Set initial page index to 0
     },
     useGlobalFilter,
     useSortBy,
@@ -47,9 +50,16 @@ export default function ColumnsTable(props) {
     headerGroups,
     page,
     prepareRow,
-    initialState,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
   } = tableInstance;
-  initialState.pageSize = 5;
 
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
@@ -65,7 +75,7 @@ export default function ColumnsTable(props) {
           fontSize='22px'
           fontWeight='700'
           lineHeight='100%'>
-          Complex Table
+          Past Week Result
         </Text>
         <Menu />
       </Flex>
@@ -98,60 +108,26 @@ export default function ColumnsTable(props) {
               <Tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
                   let data = "";
-                  if (cell.column.Header === "NAME") {
-                    data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        {cell.value}
-                      </Text>
-                    );
-                  } else if (cell.column.Header === "STATUS") {
+                  if (cell.column.Header === "Match") {
                     data = (
                       <Flex align='center'>
-                        <Icon
-                          w='24px'
-                          h='24px'
-                          me='5px'
-                          color={
-                            cell.value === "Approved"
-                              ? "green.500"
-                              : cell.value === "Disable"
-                              ? "red.500"
-                              : cell.value === "Error"
-                              ? "orange.500"
-                              : null
-                          }
-                          as={
-                            cell.value === "Approved"
-                              ? MdCheckCircle
-                              : cell.value === "Disable"
-                              ? MdCancel
-                              : cell.value === "Error"
-                              ? MdOutlineError
-                              : null
-                          }
-                        />
                         <Text color={textColor} fontSize='sm' fontWeight='700'>
                           {cell.value}
                         </Text>
                       </Flex>
                     );
-                  } else if (cell.column.Header === "DATE") {
+                  } else if (cell.column.Header === "Date") {
                     data = (
                       <Text color={textColor} fontSize='sm' fontWeight='700'>
                         {cell.value}
                       </Text>
                     );
-                  } else if (cell.column.Header === "PROGRESS") {
+                  } else if (cell.column.Header === "Result") {
+                    // If the field name is "id", generate a link with the ID as the path parameter
                     data = (
-                      <Flex align='center'>
-                        <Progress
-                          variant='table'
-                          colorScheme='brandScheme'
-                          h='8px'
-                          w='108px'
-                          value={cell.value}
-                        />
-                      </Flex>
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        {cell.value}
+                      </Text>
                     );
                   }
                   return (
@@ -159,8 +135,6 @@ export default function ColumnsTable(props) {
                       {...cell.getCellProps()}
                       key={index}
                       fontSize={{ sm: "14px" }}
-                      maxH='30px !important'
-                      py='8px'
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       borderColor='transparent'>
                       {data}
@@ -172,6 +146,68 @@ export default function ColumnsTable(props) {
           })}
         </Tbody>
       </Table>
-    </Card>
+      <Flex justify='center' align='center' mt='10px'>
+        <Button
+          onClick={() => gotoPage(0)}
+          disabled={!canPreviousPage}
+          variant='outline'
+          size='sm'
+          mr='2'
+        >
+          {'<<'}
+        </Button>
+        <Button
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+          variant='outline'
+          size='sm'
+          mr='2'
+        >
+          {'<'}
+        </Button>
+        <Text>
+          Page{' '}
+          <Text as="span" fontWeight="700">
+            {pageIndex + 1}
+          </Text>{' '}
+          of{' '}
+          <Text as="span" fontWeight="700">
+            {pageOptions.length}
+          </Text>
+        </Text>
+        <Button
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+          variant='outline'
+          size='sm'
+          ml='2'
+        >
+          {'>'}
+        </Button>
+        <Button
+          onClick={() => gotoPage(pageCount - 1)}
+          disabled={!canNextPage}
+          variant='outline'
+          size='sm'
+          ml='2'
+        >
+          {'>>'}
+        </Button>
+        <Select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+          size='sm'
+          ml='2'
+        >
+          {[10, 20, 50].map((size) => (
+            <option key={size} value={size}>
+              Show {size}
+            </option>
+          ))}
+        </Select>
+      </Flex>
+</Card> 
   );
 }

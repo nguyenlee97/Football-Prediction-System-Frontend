@@ -14,19 +14,15 @@ export const columnsDataCheck = [
 ];
 export const columnsDataComplex = [
   {
-    Header: "NAME",
-    accessor: "name",
+    Header: "Match",
+    accessor: "match",
   },
   {
-    Header: "STATUS",
-    accessor: "status",
-  },
-  {
-    Header: "DATE",
+    Header: "Date",
     accessor: "date",
   },
   {
-    Header: "PROGRESS",
-    accessor: "progress",
+    Header: "Result",
+    accessor: "result",
   },
 ];
