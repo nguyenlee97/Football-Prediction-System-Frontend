@@ -11,6 +11,7 @@ import {
   Select,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { NavLink } from "react-router-dom";
 import React, { useMemo } from "react";
 import {
   useGlobalFilter,
@@ -121,7 +122,7 @@ export default function CheckTable(props) {
                   } else if (cell.column.Header === " ") {
                     // If the field name is "id", generate a link with the ID as the path parameter
                     data = (
-                      <Link to={`/matches/${cell.value}`}>
+                      <NavLink to={`matchDetail/${cell.value}`}>
                         <Text
                           as="span"
                           color={textColor}
@@ -131,7 +132,7 @@ export default function CheckTable(props) {
                           _hover={{ color: "blue.500" }}>
                           {'Go to Match Detail'}
                         </Text>
-                      </Link>
+                      </NavLink>
                     );
                   }
                   return (

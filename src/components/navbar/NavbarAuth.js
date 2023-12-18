@@ -471,7 +471,7 @@ export default function AuthNavbar(props) {
               }
               logoText={props.logoText}
               secondary={props.secondary}
-              routes={routes}
+              routes={routes.filter(route => route.name !== "Match Detail")}
               {...rest}
             />
           </Box>

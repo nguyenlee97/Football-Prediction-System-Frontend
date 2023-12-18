@@ -64,7 +64,7 @@ export default function HeaderLinks(props) {
 					</Text>
 				</Text>
 			</Flex>
-			<SidebarResponsive routes={routes} />
+			<SidebarResponsive routes={routes.filter(route => route.name !== "Match Detail")} />
 
 			<Menu>
 				<MenuButton p="0px">

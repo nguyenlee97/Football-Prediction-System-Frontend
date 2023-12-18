@@ -13,6 +13,8 @@ import {
 import MainDashboard from "views/admin/default";
 import Profile from "views/admin/profile";
 import DataTables from "views/admin/dataTables";
+import MatchDetail from 'views/admin/matchDetail';
+
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -45,6 +47,13 @@ const routes = [
     path: "/sign-in",
     icon: <Icon as={MdLock} width='20px' height='20px' color='inherit' />,
     component: SignInCentered,
+  },
+  {
+    name: "Match Detail",
+    layout: "/admin",
+    path: "/matchDetail/:matchId",
+    icon: <Icon as={MdLock} width='20px' height='20px' color='inherit' />,
+    component: MatchDetail,
   },
 ];
 
